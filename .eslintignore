@@ -1,14 +1,10 @@
 # Don't check auto-generated stuff into git
-.next/
-coverage
+.cache
 node_modules
-stats.json
-yarn-error.log
+coverage/
 
 # Cruft
 .DS_Store
 npm-debug.log
-.eslintcache
+.next/
 
-*~
-package-lock.json

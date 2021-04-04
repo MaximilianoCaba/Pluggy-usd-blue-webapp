@@ -11,8 +11,8 @@ export function* getChangeRequest() {
     yield put(getChange.request());
 
     const quotes = yield call(request, BASE_URL + 'quotes');
-    const average = yield call(request, BASE_URL + 'averages');
-    const slippages = yield call(request, BASE_URL + 'slippages');
+    const average = yield call(request, BASE_URL + 'average');
+    const slippages = yield call(request, BASE_URL + 'slippage');
 
     yield put(getChange.success({ quotes, average, slippages }));
   } catch (err) {

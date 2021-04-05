@@ -24,6 +24,15 @@ const CardRow = styled('div')`
   grid-template-columns: repeat(3, 1fr);
   grid-gap: 70px;
   grid-auto-rows: minmax(0, 400px);
+
+  @media only screen and (max-width: 768px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media only screen and (max-width: 425px) {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 `;
 
 const TableRow = styled('div')`
@@ -33,6 +42,11 @@ const TableRow = styled('div')`
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 70px;
+
+  @media only screen and (max-width: 425px) {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 `;
 
 const ContainerCard = styled('div')`
@@ -51,8 +65,6 @@ export function Home({ getChange, changeData }) {
     return () => clearInterval(interval);
   }, []);
 
-  console.log(changeData);
-
   const {
     loading,
     change: { average, quotes, slippages },
@@ -63,7 +75,6 @@ export function Home({ getChange, changeData }) {
 
     const bestSell = quotes.reduce((prev, current) => (prev.bestSell < current.bestSell ? prev : current));
 
-    console.log(bestBuy);
     return (
       <Layout>
         <CardRow>

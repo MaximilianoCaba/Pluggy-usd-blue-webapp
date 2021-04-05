@@ -34,12 +34,53 @@ const ImgSrc = styled('img')`
   width: 60%;
 `;
 
+const Text = styled('span')`
+  font-family: 'Inter';
+  font-size: large;
+`;
+
+const TextCol = styled('span')`
+  font-size: large;
+`;
+
+const PricePositive = styled('span')`
+  font-family: 'Inter';
+  font-size: large;
+  color: #02cb1b;
+`;
+
+const PriceNeutral = styled('span')`
+  font-family: 'Inter';
+  font-size: large;
+  color: #0289cb;
+`;
+
+const PriceNegative = styled('span')`
+  font-family: 'Inter';
+  font-size: large;
+  color: #e80e0e;
+`;
+
 export function TableQuote(props) {
   const { isLoading, items } = props;
 
-  if (isLoading) {
+  if (isLoading && !items) {
     return <Spiner />;
   }
+
+  const DrawSlippage = (value, inverse) => {
+    const { price } = value;
+    const priceToFix = +parseFloat(price).toFixed(2);
+    if (Math.sign(price) === -1) {
+      return inverse ? <PricePositive>{priceToFix} %</PricePositive> : <PriceNegative>{priceToFix} %</PriceNegative>;
+    }
+    if (Math.sign(price) === 0) {
+      return <PriceNeutral>{priceToFix} %</PriceNeutral>;
+    }
+    if (Math.sign(price) === 1) {
+      return inverse ? <PriceNegative>{priceToFix} %</PriceNegative> : <PricePositive>{priceToFix} %</PricePositive>;
+    }
+  };
 
   const Row = item => {
     const value = item.item;
@@ -49,10 +90,18 @@ export function TableQuote(props) {
         <Th>
           <ImgSrc src={image} />
         </Th>
-        <Th>{value.buy_price}</Th>
-        <Th>{value.sell_price}</Th>
-        <Th>{value.buy_price_slippage}</Th>
-        <Th>{value.sell_price_slippage}</Th>
+        <Th>
+          <Text>$ {parseFloat(value.buy_price).toFixed(2)}</Text>
+        </Th>
+        <Th>
+          <Text>$ {parseFloat(value.sell_price).toFixed(2)}</Text>
+        </Th>
+        <Th>
+          <DrawSlippage price={value.buy_price_slippage} inverse={true} />
+        </Th>
+        <Th>
+          <DrawSlippage price={value.sell_price_slippage} inverse={false} />
+        </Th>
       </Tr>
     );
   };
@@ -61,11 +110,21 @@ export function TableQuote(props) {
     <Table>
       <Thead>
         <Tr>
-          <Th />
-          <Th>Buy</Th>
-          <Th>Sell</Th>TableQuote
-          <Th>Buy slippage</Th>
-          <Th>Sell slippage</Th>
+          <Th>
+            <TextCol>PLATFORM</TextCol>
+          </Th>
+          <Th>
+            <TextCol>BUY</TextCol>
+          </Th>
+          <Th>
+            <TextCol>SELL</TextCol>
+          </Th>
+          <Th>
+            <TextCol>BUY SLIPPAGE</TextCol>
+          </Th>
+          <Th>
+            <TextCol>SELL SLIPPAGE</TextCol>
+          </Th>
         </Tr>
       </Thead>
       {!items ? <Spiner /> : items.map(item => <Row item={item} key={item.name} />)}

@@ -5,7 +5,7 @@ import request from 'utils/request';
 import { getChange } from './actions';
 
 export function* getChangeRequest() {
-  const BASE_URL = 'https://dd5b233f90e2.ngrok.io/api/';
+  const BASE_URL = 'https://6e6ca4d5a522.ngrok.io/api/';
 
   try {
     yield put(getChange.request());

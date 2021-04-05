@@ -13,26 +13,34 @@ const CardItem = styled('div')`
   text-decoration: none;
   height: auto;
   color: #757575;
+  align-items: center;
 `;
 
-const Title = styled('h3')`
+const ImgSrc = styled('img')`
+  width: 50%;
+  padding: 20px;
+`;
+
+const Price = styled('h1')`
   width: 100%;
+  color: #009879;
 `;
 
 export function CardBest(props) {
   const { isLoading, item, type } = props;
 
-  if (isLoading) {
+  if (isLoading && !item) {
     return <Spiner />;
   }
 
   if (item) {
     const price = type === 'BUY' ? item.buy_price : item.sell_price;
+    const image = `/static/images/${item.name}.png`;
     return (
       <CardItem>
-        <Title>{item.name}</Title>
-        <Title>{type}</Title>
-        <Title>{price}</Title>
+        <ImgSrc src={image} />
+        <h2> BEST {type}</h2>
+        <Price>$ {parseFloat(price).toFixed(2)}</Price>
       </CardItem>
     );
   }

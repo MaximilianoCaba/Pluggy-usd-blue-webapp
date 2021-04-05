@@ -13,29 +13,50 @@ const CardItem = styled('div')`
   text-decoration: none;
   height: auto;
   color: #757575;
+  justify-content: space-between;
 `;
 
 const Title = styled('h3')`
   width: 100%;
 `;
 
+const Price = styled('h1')`
+  width: 100%;
+  color: #009879;
+`;
+
+const ItemCol = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
 export function CardAverage(props) {
   const { isLoading, item } = props;
 
-  if (isLoading) {
+  const getDate = () => {
+    const d = new Date();
+    return [d.getMonth() + 1, d.getDate(), d.getFullYear()].join('/') + ' ' + [d.getHours(), d.getMinutes()].join(':');
+  };
+
+  if (isLoading && !item) {
     return <Spiner />;
   }
 
   if (item) {
     return (
       <CardItem>
-        <Title>BUY</Title>
-
-        <Title>{item.average_buy_price}</Title>
-
-        <Title>SELL</Title>
-
-        <Title>{item.average_sell_price}</Title>
+        <h1>AVERAGE</h1>
+        <ItemCol>
+          <div>
+            <h2>BUY</h2>
+            <Price>$ {parseFloat(item.average_buy_price).toFixed(2)}</Price>
+          </div>
+          <div>
+            <h2>SELL</h2>
+            <Price>$ {parseFloat(item.average_sell_price).toFixed(2)}</Price>
+          </div>
+        </ItemCol>
+        <Title>Last Update: {getDate()}</Title>
       </CardItem>
     );
   }

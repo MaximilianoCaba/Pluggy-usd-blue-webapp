@@ -5,7 +5,7 @@ import request from 'utils/request';
 import { getChange } from './actions';
 
 export function* getChangeRequest() {
-  const BASE_URL = 'https://6e6ca4d5a522.ngrok.io/api/';
+  const BASE_URL = 'https://usd-api.herokuapp.com/api/';
 
   try {
     yield put(getChange.request());

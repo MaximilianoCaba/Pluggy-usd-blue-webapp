@@ -1,30 +1,30 @@
 import produce from 'immer';
 
-import { getChange } from './actions';
+import { getQuote } from './actions';
 
 export const initialState = {
   loading: false,
   fetched: false,
   error: null,
-  change: {},
+  quotes: [],
 };
 
-const showcasesReducer = (state = initialState, { type, payload }) =>
+const quotesReducer = (state = initialState, { type, payload }) =>
   produce(state, draft => {
     switch (type) {
-      case getChange.REQUEST:
+      case getQuote.REQUEST:
         draft.loading = true;
 
         break;
 
-      case getChange.SUCCESS:
+      case getQuote.SUCCESS:
         draft.loading = false;
         draft.fetched = true;
-        draft.change = payload;
+        draft.quotes = payload;
 
         break;
 
-      case getChange.FAILURE:
+      case getQuote.FAILURE:
         draft.loading = false;
         draft.fetched = false;
         draft.error = payload;
@@ -33,4 +33,4 @@ const showcasesReducer = (state = initialState, { type, payload }) =>
     }
   });
 
-export default showcasesReducer;
+export default quotesReducer;

@@ -3,18 +3,26 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { useInjectReducer } from 'utils/inject-reducer';
-import { useInjectSaga } from 'utils/inject-saga';
 import Layout from 'components/Layout';
-import saga from './saga';
-import reducer from './reducer';
-import { getChange } from './actions';
-import { selectChange } from './selectors';
+import { getQuote } from '../../redux/quote/actions';
+import { selectQuote } from '../../redux/quote/selectors';
+import { getSlippage } from '../../redux/slippage/actions';
+import { selectSlippage } from '../../redux/slippage/selectors';
+import { getAverage } from '../../redux/average/actions';
+import { selectAverage } from '../../redux/average/selectors';
 import styled from '@emotion/styled';
 import CardAverage from '../../components/CardAverage';
 import CardBest from '../../components/CardBest';
 import Spiner from '../../components/Spiner';
 import TableQuote from '../../components/Table';
+import { useInjectSaga } from '../../utils/inject-saga';
+import sagaQuote from '../../redux/quote/saga';
+import { useInjectReducer } from '../../utils/inject-reducer';
+import reducerQuote from '../../redux/quote/reducer';
+import sagaSlippage from '../../redux/slippage/saga';
+import reducerSlippage from '../../redux/slippage/reducer';
+import sagaAverage from '../../redux/average/saga';
+import reducerAverage from '../../redux/average/reducer';
 
 const CardRow = styled('div')`
   margin-top: 40px;
@@ -55,39 +63,50 @@ const ContainerCard = styled('div')`
   display: grid;
 `;
 
-export function Home({ getChange, changeData }) {
-  useInjectSaga({ key: 'change', saga });
-  useInjectReducer({ key: 'change', reducer });
+export function Home({ getQuotes, quoteData, getSlippages, slippageData, getAverage, averageData }) {
+  useInjectSaga({ key: 'quotes', saga: sagaQuote });
+  useInjectReducer({ key: 'quotes', reducer: reducerQuote });
+  useInjectSaga({ key: 'slippages', saga: sagaSlippage });
+  useInjectReducer({ key: 'slippages', reducer: reducerSlippage });
+  useInjectSaga({ key: 'average', saga: sagaAverage });
+  useInjectReducer({ key: 'average', reducer: reducerAverage });
 
+  const getState = () => {
+    getQuotes();
+    getSlippages();
+    getAverage();
+  };
   useEffect(() => {
-    getChange();
-    const interval = setInterval(() => getChange(), 60000);
+    getState();
+    const interval = setInterval(() => getState(), 60000);
     return () => clearInterval(interval);
   }, []);
 
-  const {
-    loading,
-    change: { average, quotes, slippages },
-  } = changeData;
+  const { loading: loadingQuotes, quotes } = quoteData;
+  const { loading: loadingSlippage, slippages } = slippageData;
+  const { loading: loadingAverage, average } = averageData;
 
   if (average && quotes) {
-    const bestBuy = quotes.reduce((prev, current) => (prev.buy_price > current.buy_price ? prev : current));
-
-    const bestSell = quotes.reduce((prev, current) => (prev.bestSell < current.bestSell ? prev : current));
+    const bestBuy = quotes.length
+      ? quotes.reduce((prev, current) => (prev.buy_price > current.buy_price ? prev : current))
+      : {};
+    const bestSell = quotes.length
+      ? quotes.reduce((prev, current) => (prev.bestSell < current.bestSell ? prev : current))
+      : {};
 
     return (
       <Layout>
         <CardRow>
           <ContainerCard>
-            <CardBest isLoading={loading} item={bestBuy} type="BUY" />
+            <CardBest isLoading={loadingQuotes} item={bestBuy} type="BUY" />
           </ContainerCard>
-          <CardAverage isLoading={loading} item={average} />
+          <CardAverage isLoading={loadingAverage} item={average} />
           <ContainerCard>
-            <CardBest isLoading={loading} item={bestSell} type="SELL" />
+            <CardBest isLoading={loadingQuotes} item={bestSell} type="SELL" />
           </ContainerCard>
         </CardRow>
         <TableRow>
-          <TableQuote isLoading={loading} items={slippages} />
+          <TableQuote isLoading={loadingSlippage} items={slippages} />
         </TableRow>
       </Layout>
     );
@@ -96,18 +115,28 @@ export function Home({ getChange, changeData }) {
 }
 
 const mapStateToProps = createStructuredSelector({
-  changeData: selectChange(),
+  quoteData: selectQuote(),
+  slippageData: selectSlippage(),
+  averageData: selectAverage(),
 });
 
 export function mapDispatchToProps(dispatch) {
-  return { getChange: () => dispatch(getChange()) };
+  return {
+    getQuotes: () => dispatch(getQuote()),
+    getSlippages: () => dispatch(getSlippage()),
+    getAverage: () => dispatch(getAverage()),
+  };
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 Home.propTypes = {
-  changeData: PropTypes.object,
-  getChange: PropTypes.func,
+  slippageData: PropTypes.object,
+  getSlippages: PropTypes.func,
+  quoteData: PropTypes.object,
+  getQuotes: PropTypes.func,
+  averageData: PropTypes.object,
+  getAverage: PropTypes.func,
 };
 
 export default compose(withConnect, memo)(Home);

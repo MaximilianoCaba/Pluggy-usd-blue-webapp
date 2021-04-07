@@ -36,7 +36,7 @@ export function injectSagaFactory(store, isValid) {
 
     let hasSaga = Reflect.has(store.injectedSagas, key);
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NEXT_PUBLIC_NODE_ENV !== 'production') {
       const oldDescriptor = store.injectedSagas[key];
       if (hasSaga && oldDescriptor.saga !== saga) {
         oldDescriptor.task.cancel();
@@ -65,7 +65,7 @@ export function ejectSagaFactory(store, isValid) {
       const descriptor = store.injectedSagas[key];
       if (descriptor.mode && descriptor.mode !== DAEMON) {
         descriptor.task.cancel();
-        if (process.env.NODE_ENV === 'production') {
+        if (process.env.NEXT_PUBLIC_NODE_ENV === 'production') {
           store.injectedSagas[key] = 'done'; // eslint-disable-line no-param-reassign
         }
       }

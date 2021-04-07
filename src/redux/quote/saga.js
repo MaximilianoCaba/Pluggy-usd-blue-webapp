@@ -1,12 +1,11 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import request from 'utils/request';
 import { getQuote } from './actions';
-import { URL_API } from '../../constants/config';
 
 export function* getQuoteRequest() {
   try {
     yield put(getQuote.request());
-    const quotes = yield call(request, URL_API + 'quotes');
+    const quotes = yield call(request, process.env.NEXT_PUBLIC_URL_API + 'quotes');
     yield put(getQuote.success(quotes));
   } catch (err) {
     yield put(getQuote.failure(err));

@@ -17,7 +17,6 @@ const CardItem = styled('div')`
 `;
 
 const ImgSrc = styled('img')`
-  width: 50%;
   padding: 20px;
 `;
 
@@ -38,7 +37,9 @@ export function CardBest(props) {
     const image = `/static/images/${item.name}.png`;
     return (
       <CardItem>
-        <ImgSrc src={image} />
+        <a href={item.source} target="noopener noreferrer">
+          <ImgSrc src={image} />
+        </a>
         <h2> BEST {type}</h2>
         <Price>$ {parseFloat(price).toFixed(2)}</Price>
       </CardItem>

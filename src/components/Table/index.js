@@ -88,7 +88,9 @@ export function TableQuote(props) {
     return (
       <Tr key={value.name}>
         <Th>
-          <ImgSrc src={image} />
+          <a href={value.source} target="noopener noreferrer">
+            <ImgSrc src={image} />
+          </a>
         </Th>
         <Th>
           <Text>$ {parseFloat(value.buy_price).toFixed(2)}</Text>

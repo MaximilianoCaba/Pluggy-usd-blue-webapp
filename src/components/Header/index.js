@@ -32,7 +32,7 @@ const Space = styled('div')`
 `;
 
 const ImgSrc = styled('img')`
-  width: 20%;
+  width: 22%;
 `;
 
 export function Header() {

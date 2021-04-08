@@ -23,6 +23,7 @@ import sagaSlippage from '../../redux/slippage/saga';
 import reducerSlippage from '../../redux/slippage/reducer';
 import sagaAverage from '../../redux/average/saga';
 import reducerAverage from '../../redux/average/reducer';
+import CardOffer from '../../components/CardOffer';
 
 const CardRow = styled('div')`
   margin-top: 40px;
@@ -33,11 +34,12 @@ const CardRow = styled('div')`
   grid-gap: 70px;
   grid-auto-rows: minmax(0, 400px);
 
-  @media only screen and (max-width: 768px) {
+  @media only screen and (max-width: 1024px) {
     grid-template-columns: repeat(1, 1fr);
   }
 
   @media only screen and (max-width: 425px) {
+    margin-top: 5px;
     margin-left: 5px;
     margin-right: 5px;
   }
@@ -51,9 +53,14 @@ const TableRow = styled('div')`
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 70px;
 
-  @media only screen and (max-width: 425px) {
-    margin-left: 5px;
-    margin-right: 5px;
+  @media only screen and (max-width: 768px) {
+    display: none;
+  }
+`;
+
+const CardOfferRow = styled('div')`
+  @media only screen and (min-width: 769px) {
+    display: none;
   }
 `;
 
@@ -61,6 +68,15 @@ const ContainerCard = styled('div')`
   margin-top: 70px;
   height: 70%;
   display: grid;
+
+  @media only screen and (max-width: 1024px) {
+    margin-top: 5px;
+    height: 100%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    margin-top: 5px;
+  }
 `;
 
 export function Home({ getQuotes, quoteData, getSlippages, slippageData, getAverage, averageData }) {
@@ -91,7 +107,7 @@ export function Home({ getQuotes, quoteData, getSlippages, slippageData, getAver
       ? quotes.reduce((prev, current) => (prev.buy_price > current.buy_price ? prev : current))
       : {};
     const bestSell = quotes.length
-      ? quotes.reduce((prev, current) => (prev.bestSell < current.bestSell ? prev : current))
+      ? quotes.reduce((prev, current) => (prev.sell_price < current.sell_price ? prev : current))
       : {};
 
     return (
@@ -104,6 +120,11 @@ export function Home({ getQuotes, quoteData, getSlippages, slippageData, getAver
           <ContainerCard>
             <CardBest isLoading={loadingQuotes} item={bestSell} type="SELL" />
           </ContainerCard>
+          <CardOfferRow>
+            {slippages.map(item => (
+              <CardOffer isLoading={loadingSlippage} item={item} key={item.name} />
+            ))}
+          </CardOfferRow>
         </CardRow>
         <TableRow>
           <TableQuote isLoading={loadingSlippage} items={slippages} />

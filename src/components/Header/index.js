@@ -6,7 +6,7 @@ const HeaderRoot = styled(`header`)`
   left: 0;
   width: 100%;
   height: 64px;
-  position: sticky;
+  position: relative;
   top: 0px;
   z-index: 1000;
 `;

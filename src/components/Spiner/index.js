@@ -17,7 +17,6 @@ const pulse = keyframes`
 `;
 
 const SpinnerRoot = styled('div')`
-  width: 100px;
   height: 100px;
   border-radius: 999px;
   margin: 0 auto;
